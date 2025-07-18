@@ -1,0 +1,829 @@
+# =============================================================================
+# DISCORD BOT .GITIGNORE
+# =============================================================================
+
+# =============================================================================
+# CONFIGURACIÓN SENSIBLE Y TOKENS
+# =============================================================================
+.env
+.env.*
+!.env.example
+config/secrets.py
+config/tokens.py
+src/bot/config/local_settings.py
+
+# Archivos de configuración con datos sensibles
+*.key
+*.pem
+*.p12
+token.txt
+secrets.json
+credentials.json
+
+# =============================================================================
+# PYTHON
+# =============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# =============================================================================
+# BASE DE DATOS
+# =============================================================================
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL
+*.sql
+postgres_data/
+
+# MySQL
+mysql_data/
+
+# Database backups
+*.dump
+*.backup
+
+# Alembic
+alembic.ini
+
+# =============================================================================
+# LOGS Y BACKUPS
+# =============================================================================
+
+# Logs del bot
+logs/
+*.log
+*.log.*
+log/
+logging/
+
+# Backups
+backups/
+backup/
+*.backup
+*.bak
+
+# Archivos temporales del bot
+temp/
+tmp/
+cache/
+.cache/
+
+# =============================================================================
+# RECURSOS Y MEDIA
+# =============================================================================
+
+# Archivos de audio grandes
+*.mp3
+*.wav
+*.flac
+*.m4a
+!src/bot/resources/sounds/sample.mp3
+
+# Videos
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Imágenes grandes (mantener samples pequeños)
+*.zip
+*.tar.gz
+*.rar
+!src/bot/resources/images/default_avatar.png
+!src/bot/resources/images/logo.png
+
+# Archivos de usuario subidos
+uploads/
+user_content/
+
+# =============================================================================
+# WEB DASHBOARD (si aplica)
+# =============================================================================
+
+# Node.js (si usas frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build del frontend
+build/
+dist/
+.next/
+out/
+
+# Static files generados
+static/collected/
+staticfiles/
+
+# =============================================================================
+# DESARROLLO Y IDEs
+# =============================================================================
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+.history/
+.ionide/
+
+# JetBrains IDEs (IntelliJ, PyCharm, WebStorm, etc.)
+.idea/
+*.iws
+*.iml
+*.ipr
+.idea_modules/
+*.idea
+
+# PyCharm específico
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+.idea/shelf
+.idea/discord.xml
+.idea/sonarlint/
+
+# WebStorm específico
+.idea/inspectionProfiles/
+.idea/jsLibraryMappings.xml
+
+# Rider específico
+.idea/.idea.*.dir/
+
+# CLion específico
+cmake-build-*/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+*.sublime-session
+.sublime-text-3/
+
+# Atom
+.atom/
+
+# Brackets
+.brackets.json
+
+# Vim
+[._]*.s[a-v][a-z]
+!*.svg  # comment out if you don't need vector files
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+*~
+tags
+[._]*.un~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+.org-id-locations
+*_archive
+*_flymake.*
+.ido.last
+.smex-items
+persp-confs/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.classpath
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Android Studio
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# Nano
+*.save
+
+# Kate
+.kateconfig
+.kateproject
+.kateproject.d/
+
+# Code::Blocks
+*.layout
+*.depend
+*.cbp
+
+# Dev-C++
+*.dev
+
+# =============================================================================
+# HERRAMIENTAS DE DESARROLLO Y LINTING
+# =============================================================================
+
+# Black (Python formatter)
+.black/
+
+# isort
+.isort.cfg
+
+# flake8
+.flake8
+
+# pylint
+.pylintrc
+pylint-report.txt
+
+# bandit
+.bandit
+
+# pre-commit
+.pre-commit-config.yaml.backup
+
+# ESLint (si usas JavaScript)
+.eslintcache
+
+# Prettier
+.prettierignore
+
+# EditorConfig
+.editorconfig
+
+# Git hooks
+.git/hooks/
+
+# =============================================================================
+# PACKAGE MANAGERS Y DEPENDENCIAS
+# =============================================================================
+
+# NPM
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+.pnp
+.pnp.js
+
+# Yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# PNPM
+.pnpm-debug.log*
+.pnpm-store/
+
+# Bower
+bower_components/
+
+# Composer (PHP)
+vendor/
+composer.lock
+
+# Bundler (Ruby)
+.bundle/
+vendor/bundle/
+
+# Go
+go.sum
+vendor/
+
+# Rust
+Cargo.lock
+target/
+
+# =============================================================================
+# TESTING Y COVERAGE
+# =============================================================================
+
+# Coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Jest (JavaScript testing)
+jest.config.js
+coverage/
+
+# Mocha
+.nyc_output
+
+# =============================================================================
+# BUILD Y DEPLOYMENT TOOLS
+# =============================================================================
+
+# Webpack
+webpack-stats.json
+
+# Parcel
+.parcel-cache/
+
+# Rollup
+rollup.config.js
+
+# Vite
+vite.config.js
+.vite/
+
+# Gulp
+gulpfile.js
+
+# Grunt
+Gruntfile.js
+
+# =============================================================================
+# MONITOREO Y PROFILING
+# =============================================================================
+
+# New Relic
+newrelic.ini
+
+# Sentry
+.sentryclirc
+
+# Application Insights
+ApplicationInsights.config
+
+# Profiling
+*.pyprof
+*.prof
+*.cprof
+
+# Memory dumps
+*.hprof
+*.mdmp
+
+# =============================================================================
+# ARCHIVOS TEMPORALES Y SISTEMA
+# =============================================================================
+
+# Thumbnails
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Windows shortcuts
+*.lnk
+
+# Windows system files
+$RECYCLE.BIN/
+*.stackdump
+
+# Linux trash
+.Trash-*/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.#*
+
+# Lock files
+*.lock
+.lock
+
+# Swap files
+*.swap
+
+# Core dumps
+core
+*.core
+
+# =============================================================================
+# CLOUD Y SERVICIOS
+# =============================================================================
+
+# AWS
+.aws/
+aws-exports.js
+
+# Google Cloud
+.gcloud/
+service-account-key.json
+
+# Heroku
+.heroku/
+
+# Vercel
+.vercel
+
+# Netlify
+.netlify/
+
+# Firebase
+.firebase/
+firebase-debug.log
+
+# =============================================================================
+# MISC ARCHIVOS COMUNES
+# =============================================================================
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.war
+*.ear
+*.sar
+*.class
+
+# Font files
+*.ttf
+*.otf
+*.woff
+*.woff2
+*.eot
+
+# Office documents
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+*.pdf
+
+# Compressed files
+*.cab
+*.deb
+*.dmg
+*.gem
+*.gz
+*.img
+*.iso
+*.msi
+*.msm
+*.msp
+*.rpm
+*.xpi
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for instrumented libs generated by jscoverage/JSCover
+lib-cov
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+.env.production
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# =============================================================================
+# SISTEMA OPERATIVO
+# =============================================================================
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# DOCKER Y CONTENEDORES
+# =============================================================================
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+.docker/
+
+# Kubernetes secrets
+k8s-secrets/
+
+# =============================================================================
+# CI/CD Y DEPLOYMENT
+# =============================================================================
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+
+# GitHub Actions secrets
+.github/secrets/
+
+# Deployment configs con datos sensibles
+deployment/production/
+deployment/secrets/
+
+# =============================================================================
+# ARCHIVOS ESPECÍFICOS DEL BOT
+# =============================================================================
+
+# Datos de usuarios (GDPR compliance)
+user_data/
+personal_data/
+
+# Cache del bot
+bot_cache/
+discord_cache/
+
+# Sesiones
+sessions/
+*.session
+
+# Archivos de estado del bot
+bot_state.json
+last_restart.txt
+uptime.json
+
+# Configuraciones locales de desarrollo
+local_config.py
+dev_settings.py
+test_config.py
+
+# =============================================================================
+# OTROS
+# =============================================================================
+
+# Archivos de lockfile que no queremos versionar
+package-lock.json
+yarn.lock
+
+# Archivos de configuración del editor
+.editorconfig
+
+# Archivos de benchmark
+benchmark_results/
+
+# Archivos de profiling
+*.prof
+
+# Archivos de monitoreo
+monitoring/
+metrics/
+
+# SSL/TLS certificates
+*.crt
+*.key
+*.pem
+certificates/
+
+# =============================================================================
+# MANTENER DIRECTORIOS VACÍOS
+# =============================================================================
+
+# Comentar las siguientes líneas si quieres mantener directorios vacíos
+!logs/.gitkeep
+!backups/.gitkeep
+!temp/.gitkeep
+!src/bot/resources/images/.gitkeep
+!src/bot/resources/sounds/.gitkeep
