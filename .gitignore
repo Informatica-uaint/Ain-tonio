@@ -573,9 +573,6 @@ $RECYCLE.BIN/
 # Swap files
 *.swap
 
-# Core dumps
-core
-*.core
 
 # =============================================================================
 # CLOUD Y SERVICIOS

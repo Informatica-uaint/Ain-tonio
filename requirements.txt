@@ -1,0 +1,28 @@
+# ====================================
+# DEPENDENCIAS BÁSICAS DEL BOT
+# ====================================
+
+# Discord.py - Librería principal para Discord
+discord.py>=2.3.0
+
+# Utilidades y helpers
+python-dotenv>=1.0.0          # Variables de entorno
+colorlog>=6.7.0               # Logging colorido
+pytz>=2023.3                  # Timezone handling
+
+# ====================================
+# DEPENDENCIAS OPCIONALES PARA FASES FUTURAS
+# ====================================
+
+# Base de datos (comentadas por ahora)
+# asyncpg>=0.28.0              # PostgreSQL async
+# alembic>=1.12.0              # Migraciones
+
+# API y Dashboard (comentadas por ahora)
+# fastapi>=0.104.0             # API REST
+# uvicorn>=0.24.0              # ASGI server
+
+# Utilidades adicionales (comentadas por ahora)
+# aiohttp>=3.9.0               # HTTP client
+# pillow>=10.0.0               # Procesamiento de imágenes
+# youtube-dl>=2021.12.17       # Para música (yt-dlp es alternativa)
