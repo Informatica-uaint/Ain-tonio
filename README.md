@@ -133,6 +133,12 @@ python src/bot/main.py
 
 ---
 
+## Licencia
+
+Este bot está licenciado bajo la [GNU AGPLv3](LICENSE).  
+Puedes modificarlo y compartirlo, siempre que mantengas los créditos y distribuyas el código bajo la misma licencia.  
+No se permite el uso comercial sin autorización previa.
+
 *Bot desarrollado con ❤️ para la comunidad*
 
 
