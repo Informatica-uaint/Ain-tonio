@@ -1,0 +1,64 @@
+# ====================================
+# DOCKER COMPOSE - Ain'tonio Discord Bot
+# ====================================
+
+version: '3.8'
+
+services:
+  # ====================================
+  # SERVICIO PRINCIPAL DEL BOT
+  # ====================================
+  discord-bot:
+    image: raztor/aintonio-bot:latest
+    container_name: aintonio-discord-bot
+    restart: unless-stopped
+
+    # Variables de entorno desde archivo .env
+    env_file:
+      - .env
+
+    # Variables adicionales del contenedor
+    environment:
+      - ENVIRONMENT=production
+      - PYTHONUNBUFFERED=1
+
+    # Volumes para persistir logs
+    volumes:
+      - ./logs:/app/logs
+      - ./bot_data:/app/data  # Para datos futuros del bot
+
+    # Configuración de red
+    networks:
+      - bot-network
+
+    # Configuración de logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# ====================================
+# REDES
+# ====================================
+networks:
+  bot-network:
+    driver: bridge
+    name: aintonio-network
+
+# ====================================
+# VOLÚMENES
+# ====================================
+volumes:
+  logs:
+    driver: local
+  bot_data:
+    driver: local
