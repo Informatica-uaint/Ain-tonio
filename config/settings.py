@@ -147,7 +147,7 @@ class Settings:
     BOT_NAME: str = "Ain'tonio"
     BOT_VERSION: str = "1.0.0"
     BOT_DESCRIPTION: str = "Bot multifuncional para la comunidad de Informática UAIn'T"
-    BOT_AUTHOR: str = "Informatica UAIn'T Community"
+    BOT_AUTHOR: str = "Raztor"
 
     # ====================================
     # CONFIGURACIÓN DE LOGGING

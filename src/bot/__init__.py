@@ -4,7 +4,7 @@ Bot de Discord para la comunidad de Informática UAIn'T
 """
 
 __version__ = "1.0.0"
-__author__ = "Informatica UAIn'T Community"
+__author__ = "Raztor"
 
 # src/bot/core/__init__.py
 """

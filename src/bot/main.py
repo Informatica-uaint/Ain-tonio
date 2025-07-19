@@ -3,7 +3,7 @@
 Punto de entrada principal del bot de Discord
 Informatica UAIn'T Community Bot
 
-Autor: Informatica UAIn'T Community
+Autor: Raztor
 Versión: 1.0.0
 """
 
