@@ -267,22 +267,84 @@ class DynamicVoiceChannels(commands.Cog, name="Canales Dinámicos"):
         await self.bot.wait_until_ready()
 
     # ====================================
+    # VERIFICACIÓN DE PERMISOS
+    # ====================================
+
+    async def check_permissions(self, interaction: discord.Interaction) -> bool:
+        """Verifica si el usuario tiene permisos para usar comandos administrativos"""
+
+        # Verificar que sea en un servidor
+        if not interaction.guild:
+            await interaction.response.send_message(
+                "❌ Este comando solo puede usarse en servidores.",
+                ephemeral=True
+            )
+            return False
+
+        # Verificar que sea un miembro
+        if not isinstance(interaction.user, discord.Member):
+            await interaction.response.send_message(
+                "❌ Error: No se pudo verificar tus permisos.",
+                ephemeral=True
+            )
+            return False
+
+        member = interaction.user
+
+        # Owner del bot siempre puede
+        if await self.bot.is_owner(member):
+            return True
+
+        # Administradores del servidor pueden
+        if member.guild_permissions.administrator:
+            return True
+
+        # Verificar si tiene permiso de gestionar canales
+        if member.guild_permissions.manage_channels:
+            return True
+
+        # Verificar roles de admin configurados
+        admin_roles = self.bot.settings.ADMIN_ROLE_IDS
+        if admin_roles and any(role.id in admin_roles for role in member.roles):
+            return True
+
+        # Verificar roles de moderador configurados
+        mod_roles = self.bot.settings.MOD_ROLE_IDS
+        if mod_roles and any(role.id in mod_roles for role in member.roles):
+            return True
+
+        # Si no tiene permisos, enviar mensaje de error
+        await interaction.response.send_message(
+            "❌ **Sin permisos suficientes**\n\n"
+            "Necesitas uno de los siguientes permisos:\n"
+            "• **Administrador** del servidor\n"
+            "• **Gestionar Canales** de Discord\n"
+            "• Rol de **Admin/Moderador** configurado en el bot",
+            ephemeral=True
+        )
+        return False
+
+    # ====================================
     # COMANDOS SLASH DE ADMINISTRACIÓN
     # ====================================
 
     # Grupo principal de comandos
     dynamic_group = app_commands.Group(
         name="canales-dinamicos",
-        description="Gestión de canales de voz dinámicos"
+        description="Gestión de canales de voz dinámicos",
+        default_permissions=discord.Permissions(manage_channels=True)
     )
 
     @dynamic_group.command(
         name="estado",
         description="Ver el estado actual del sistema de canales dinámicos"
     )
-    @app_commands.default_permissions(manage_channels=True)
     async def estado(self, interaction: discord.Interaction):
         """Muestra el estado del sistema de canales dinámicos"""
+
+        # Verificar permisos
+        if not await self.check_permissions(interaction):
+            return
 
         embed = discord.Embed(
             title="🔧 Canales de Voz Dinámicos",
@@ -318,18 +380,116 @@ class DynamicVoiceChannels(commands.Cog, name="Canales Dinámicos"):
             inline=False
         )
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+    @dynamic_group.command(
+        name="permisos",
+        description="Ver qué usuarios/roles pueden gestionar canales dinámicos"
+    )
+    @app_commands.default_permissions(administrator=True)
+    async def permisos(self, interaction: discord.Interaction):
+        """Muestra información sobre permisos para gestionar canales dinámicos"""
+
+        # Solo administradores pueden ver esto
+        if not isinstance(interaction.user, discord.Member):
+            await interaction.response.send_message(
+                "❌ Este comando solo funciona en servidores.",
+                ephemeral=True
+            )
+            return
+
+        if not interaction.user.guild_permissions.administrator:
+            await interaction.response.send_message(
+                "❌ Solo los administradores pueden ver esta información.",
+                ephemeral=True
+            )
+            return
+
+        embed = discord.Embed(
+            title="🔐 Permisos de Canales Dinámicos",
+            description="Usuarios y roles autorizados para gestionar el sistema",
+            color=discord.Color.blue()
+        )
+
+        # Usuarios que siempre pueden
+        always_allowed = [
+            "👑 **Owner del bot**",
+            "⚡ **Administradores del servidor**",
+            "🔧 **Usuarios con permiso 'Gestionar Canales'**"
+        ]
+
+        embed.add_field(
+            name="✅ Siempre Autorizados",
+            value="\n".join(always_allowed),
+            inline=False
+        )
+
+        # Roles configurados
+        admin_roles = self.bot.settings.ADMIN_ROLE_IDS
+        mod_roles = self.bot.settings.MOD_ROLE_IDS
+
+        roles_info = []
+
+        if admin_roles:
+            admin_role_mentions = []
+            for role_id in admin_roles:
+                role = interaction.guild.get_role(role_id)
+                if role:
+                    admin_role_mentions.append(f"👑 {role.mention}")
+                else:
+                    admin_role_mentions.append(f"👑 Rol no encontrado (ID: {role_id})")
+            roles_info.extend(admin_role_mentions)
+
+        if mod_roles:
+            mod_role_mentions = []
+            for role_id in mod_roles:
+                role = interaction.guild.get_role(role_id)
+                if role:
+                    mod_role_mentions.append(f"🛡️ {role.mention}")
+                else:
+                    mod_role_mentions.append(f"🛡️ Rol no encontrado (ID: {role_id})")
+            roles_info.extend(mod_role_mentions)
+
+        if roles_info:
+            embed.add_field(
+                name="📋 Roles Configurados",
+                value="\n".join(roles_info),
+                inline=False
+            )
+        else:
+            embed.add_field(
+                name="📋 Roles Configurados",
+                value="❌ No hay roles específicos configurados",
+                inline=False
+            )
+
+        # Instrucciones para configurar
+        embed.add_field(
+            name="⚙️ Configurar Roles",
+            value="Para configurar roles específicos, edita tu archivo `.env`:\n"
+                  "```\n"
+                  "ADMIN_ROLE_IDS=123456789,987654321\n"
+                  "MOD_ROLE_IDS=555666777,888999000\n"
+                  "```\n"
+                  "Luego reinicia el bot.",
+            inline=False
+        )
+
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @dynamic_group.command(
         name="listar",
         description="Lista todos los canales dinámicos activos"
     )
-    @app_commands.default_permissions(manage_channels=True)
     async def listar(self, interaction: discord.Interaction):
         """Lista todos los canales dinámicos activos"""
 
+        # Verificar permisos
+        if not await self.check_permissions(interaction):
+            return
+
         if not self.temp_channels:
-            await interaction.response.send_message("📭 No hay canales temporales activos.")
+            await interaction.response.send_message("📭 No hay canales temporales activos.", ephemeral=True)
             return
 
         embed = discord.Embed(
@@ -351,15 +511,18 @@ class DynamicVoiceChannels(commands.Cog, name="Canales Dinámicos"):
                     inline=True
                 )
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @dynamic_group.command(
         name="reconfigurar",
         description="Reconfigura los canales trigger del sistema"
     )
-    @app_commands.default_permissions(manage_channels=True)
     async def reconfigurar(self, interaction: discord.Interaction):
         """Reconfigura los canales trigger"""
+
+        # Verificar permisos
+        if not await self.check_permissions(interaction):
+            return
 
         self.trigger_channels.clear()
         await self.setup_trigger_channels()
@@ -384,17 +547,20 @@ class DynamicVoiceChannels(commands.Cog, name="Canales Dinámicos"):
                     inline=False
                 )
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @dynamic_group.command(
         name="limpiar",
         description="Ejecuta limpieza manual de canales vacíos"
     )
-    @app_commands.default_permissions(manage_channels=True)
     async def limpiar(self, interaction: discord.Interaction):
         """Ejecuta limpieza manual de canales vacíos"""
 
-        await interaction.response.defer()  # El proceso puede tomar tiempo
+        # Verificar permisos
+        if not await self.check_permissions(interaction):
+            return
+
+        await interaction.response.defer(ephemeral=True)  # El proceso puede tomar tiempo
 
         cleaned = 0
 
@@ -419,16 +585,19 @@ class DynamicVoiceChannels(commands.Cog, name="Canales Dinámicos"):
             inline=False
         )
 
-        await interaction.followup.send(embed=embed)
+        await interaction.followup.send(embed=embed, ephemeral=True)
 
     @dynamic_group.command(
         name="eliminar",
         description="Elimina el canal dinámico de un usuario específico"
     )
     @app_commands.describe(usuario="Usuario cuyo canal dinámico quieres eliminar")
-    @app_commands.default_permissions(manage_channels=True)
     async def eliminar(self, interaction: discord.Interaction, usuario: discord.Member):
         """Elimina el canal de un usuario específico"""
+
+        # Verificar permisos
+        if not await self.check_permissions(interaction):
+            return
 
         if usuario.id not in self.user_channels:
             embed = discord.Embed(
@@ -436,7 +605,7 @@ class DynamicVoiceChannels(commands.Cog, name="Canales Dinámicos"):
                 description=f"{usuario.mention} no tiene un canal dinámico activo.",
                 color=discord.Color.red()
             )
-            await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
         channel_id = self.user_channels[usuario.id]
@@ -459,16 +628,19 @@ class DynamicVoiceChannels(commands.Cog, name="Canales Dinámicos"):
                 color=discord.Color.green()
             )
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @dynamic_group.command(
         name="info",
         description="Información detallada sobre un canal dinámico específico"
     )
     @app_commands.describe(canal="Canal de voz del que quieres ver información")
-    @app_commands.default_permissions(manage_channels=True)
     async def info_canal(self, interaction: discord.Interaction, canal: discord.VoiceChannel):
         """Muestra información detallada de un canal específico"""
+
+        # Verificar permisos
+        if not await self.check_permissions(interaction):
+            return
 
         if canal.id not in self.temp_channels:
             embed = discord.Embed(
@@ -527,7 +699,7 @@ class DynamicVoiceChannels(commands.Cog, name="Canales Dinámicos"):
                 inline=False
             )
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 async def setup(bot: commands.Bot) -> None:

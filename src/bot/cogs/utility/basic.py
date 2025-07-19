@@ -32,7 +32,7 @@ class BasicCommands(commands.Cog, name="Utilidad"):
             discord.Color.red()
         )
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="info", description="Información del bot")
     async def info(self, interaction: discord.Interaction) -> None:
@@ -75,7 +75,7 @@ class BasicCommands(commands.Cog, name="Utilidad"):
 
         embed.set_footer(text=f"Bot ID: {self.bot.user.id}")
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="servidor", description="Información del servidor")
     async def servidor(self, interaction: discord.Interaction) -> None:
@@ -133,7 +133,7 @@ class BasicCommands(commands.Cog, name="Utilidad"):
 
         embed.set_footer(text=f"ID: {guild.id}")
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="usuario", description="Información de un usuario")
     @app_commands.describe(usuario="Usuario del que quieres ver la información")
@@ -202,7 +202,7 @@ class BasicCommands(commands.Cog, name="Utilidad"):
             highest_role = target.roles[-1]  # El último rol es el más alto
             embed.set_footer(text=f"Rol más alto: @{highest_role.name}")
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 async def setup(bot: commands.Bot) -> None:
