@@ -70,8 +70,6 @@ jobs:
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
           type=semver,pattern={{major}}
-          # Tag para PRs
-          type=pr
           # Tag con SHA para desarrollo
           type=sha,prefix={{branch}}-
     
