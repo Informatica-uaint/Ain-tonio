@@ -129,7 +129,6 @@ python src/bot/main.py
 
 - **📖 Documentación**: `docs/`
 - **🐛 Issues**: GitHub Issues
-- **💬 Discord**: [Servidor de soporte](enlace)
 
 ---
 
