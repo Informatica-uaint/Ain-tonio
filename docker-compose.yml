@@ -1,5 +1,6 @@
 # ====================================
 # DOCKER COMPOSE - Ain'tonio Discord Bot
+# Actualizado con volúmenes de Docker
 # ====================================
 
 version: '3.8'
@@ -21,11 +22,13 @@ services:
     environment:
       - ENVIRONMENT=production
       - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app/src
 
-    # Volumes para persistir logs
+    # Volúmenes de Docker (no carpetas mapeadas)
     volumes:
-      - ./logs:/app/logs
-      - ./bot_data:/app/data  # Para datos futuros del bot
+      - bot_logs:/app/logs
+      - bot_data:/app/data
+      - bot_resources:/app/src/resources
 
     # Configuración de red
     networks:
@@ -40,7 +43,7 @@ services:
 
     # Health check
     healthcheck:
-      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      test: ["CMD", "python", "-c", "import sys; sys.path.insert(0, '/app/src'); from config.settings import get_settings; get_settings().validate()"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -55,10 +58,15 @@ networks:
     name: aintonio-network
 
 # ====================================
-# VOLÚMENES
+# VOLÚMENES DE DOCKER
 # ====================================
 volumes:
-  logs:
+  bot_logs:
     driver: local
+    name: aintonio_logs
   bot_data:
     driver: local
+    name: aintonio_data
+  bot_resources:
+    driver: local
+    name: aintonio_resources
