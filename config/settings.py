@@ -55,6 +55,26 @@ class Settings:
         WELCOME_CHANNEL_ID = int(os.getenv("WELCOME_CHANNEL_ID"))
 
     # ====================================
+    # CONFIGURACIÓN DE CANALES DINÁMICOS
+    # ====================================
+
+    # Nombres de canales trigger para canales dinámicos
+    @property
+    def DYNAMIC_VOICE_TRIGGER_NAMES(self) -> List[str]:
+        """Lista de nombres de canales que activan la creación de canales dinámicos"""
+        trigger_names = os.getenv("DYNAMIC_VOICE_TRIGGER_NAMES", "🔧 Crear Canal,Crear Canal,➕ Crear Canal")
+        return [name.strip() for name in trigger_names.split(",") if name.strip()]
+
+    # Prefijo para canales temporales
+    DYNAMIC_VOICE_CHANNEL_PREFIX: str = os.getenv("DYNAMIC_VOICE_CHANNEL_PREFIX", "💬 Canal de")
+
+    # Tiempo de espera antes de eliminar canal vacío (segundos)
+    DYNAMIC_VOICE_CLEANUP_DELAY: int = int(os.getenv("DYNAMIC_VOICE_CLEANUP_DELAY", "10"))
+
+    # Intervalo de limpieza automática (minutos)
+    DYNAMIC_VOICE_CLEANUP_INTERVAL: int = int(os.getenv("DYNAMIC_VOICE_CLEANUP_INTERVAL", "5"))
+
+    # ====================================
     # CONFIGURACIÓN DE ROLES
     # ====================================
 
@@ -106,6 +126,13 @@ class Settings:
 
         if self.DISCORD_TOKEN == "your_discord_bot_token_here":
             errors.append("Debes configurar un DISCORD_TOKEN válido")
+
+        # Validar configuración de canales dinámicos
+        if self.DYNAMIC_VOICE_CLEANUP_DELAY < 1:
+            errors.append("DYNAMIC_VOICE_CLEANUP_DELAY debe ser mayor a 0")
+
+        if self.DYNAMIC_VOICE_CLEANUP_INTERVAL < 1:
+            errors.append("DYNAMIC_VOICE_CLEANUP_INTERVAL debe ser mayor a 0")
 
         if errors:
             raise ValueError(

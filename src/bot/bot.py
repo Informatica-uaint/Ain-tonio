@@ -32,6 +32,7 @@ class BotManager:
         # Cogs básicos
         basic_cogs = [
             "cogs.utility.basic",  # Comandos básicos
+            "cogs.utility.dynamic_voice",  # Canales dinámicos
         ]
 
         # Todas las extensiones a cargar
