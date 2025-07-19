@@ -8,7 +8,7 @@ from typing import Optional, List
 import discord
 from discord.ext import commands
 
-from src.config.settings import get_settings
+from config import get_settings
 from .exceptions import ConfigurationError, format_discord_error, should_log_error
 
 logger = logging.getLogger(__name__)
