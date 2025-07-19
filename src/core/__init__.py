@@ -1,4 +1,3 @@
-# src/bot/core/__init__.py
 """
 Núcleo del bot - Funcionalidades centrales
 """

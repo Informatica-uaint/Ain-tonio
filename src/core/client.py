@@ -4,12 +4,11 @@ Informatica UAIn'T Community Bot
 """
 
 import logging
-import asyncio
 from typing import Optional, List
 import discord
 from discord.ext import commands
 
-from config.settings import get_settings
+from src.config.settings import get_settings
 from .exceptions import ConfigurationError, format_discord_error, should_log_error
 
 logger = logging.getLogger(__name__)
