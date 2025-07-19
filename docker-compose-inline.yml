@@ -1,0 +1,147 @@
+# ====================================
+# DOCKER COMPOSE - Ain'tonio Discord Bot
+# Variables de entorno inline (sin .env)
+# ====================================
+
+version: '3.8'
+
+services:
+  # ====================================
+  # SERVICIO PRINCIPAL DEL BOT
+  # ====================================
+  discord-bot:
+    image: raztor/aintonio-bot:latest
+    container_name: aintonio-discord-bot
+    restart: unless-stopped
+
+    # ====================================
+    # VARIABLES DE ENTORNO INLINE
+    # ====================================
+    environment:
+      # ====================================
+      # CONFIGURACIÓN OBLIGATORIA DEL BOT
+      # ====================================
+      # ⚠️ CAMBIAR ESTOS VALORES ⚠️
+      DISCORD_TOKEN: "your_discord_bot_token_here"           # ← REQUERIDO: Token del bot
+      GUILD_ID: "your_guild_id_here"                         # ← RECOMENDADO: ID del servidor
+
+      # ====================================
+      # CONFIGURACIÓN GENERAL
+      # ====================================
+      ENVIRONMENT: "production"
+      LOG_LEVEL: "INFO"
+      COMMAND_PREFIX: "!"
+
+      # ====================================
+      # CONFIGURACIÓN DE CANALES
+      # ====================================
+      MOD_LOG_CHANNEL_ID: ""                                 # ← ID del canal de logs de moderación
+      WELCOME_CHANNEL_ID: ""                                 # ← ID del canal de bienvenida
+
+      # ====================================
+      # CONFIGURACIÓN DE ROLES
+      # ====================================
+      ADMIN_ROLE_IDS: ""                                     # ← IDs de roles admin (separados por comas)
+      MOD_ROLE_IDS: ""                                       # ← IDs de roles moderador (separados por comas)
+      MEMBER_ROLE_ID: ""                                     # ← ID del rol de miembro
+
+      # ====================================
+      # CONFIGURACIÓN DE CANALES DINÁMICOS
+      # ====================================
+      DYNAMIC_VOICE_TRIGGER_NAMES: "🔧 Crear Canal,Crear Canal,➕ Crear Canal"
+      DYNAMIC_VOICE_CHANNEL_PREFIX: "💬 Canal de"
+      DYNAMIC_VOICE_CLEANUP_DELAY: "10"
+      DYNAMIC_VOICE_CLEANUP_INTERVAL: "5"
+
+      # ====================================
+      # CONFIGURACIÓN DOCKER
+      # ====================================
+      PYTHONUNBUFFERED: "1"
+      PYTHONPATH: "/app/src"
+      TZ: "America/Santiago"
+      PUID: "1000"
+      PGID: "1000"
+
+    # ====================================
+    # VOLÚMENES DE DOCKER
+    # ====================================
+    volumes:
+      - bot_logs:/app/logs
+      - bot_data:/app/data
+      - bot_resources:/app/src/resources
+
+    # ====================================
+    # CONFIGURACIÓN DE RED
+    # ====================================
+    networks:
+      - bot-network
+
+    # ====================================
+    # CONFIGURACIÓN DE LOGGING
+    # ====================================
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # ====================================
+    # HEALTH CHECK
+    # ====================================
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.path.insert(0, '/app/src'); from config.settings import get_settings; get_settings().validate()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # ====================================
+    # RECURSOS (OPCIONAL)
+    # ====================================
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.5'
+    #       memory: 512M
+    #     reservations:
+    #       cpus: '0.1'
+    #       memory: 128M
+
+# ====================================
+# CONFIGURACIÓN OPCIONAL: WATCHTOWER
+# (Auto-actualización de imágenes)
+# ====================================
+  # watchtower:
+  #   image: containrrr/watchtower
+  #   container_name: aintonio-watchtower
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   environment:
+  #     - WATCHTOWER_CLEANUP=true
+  #     - WATCHTOWER_INCLUDE_STOPPED=true
+  #     - WATCHTOWER_SCHEDULE=0 0 2 * * *  # Diario a las 2 AM
+  #     - WATCHTOWER_MONITOR_ONLY=true
+  #   networks:
+  #     - bot-network
+
+# ====================================
+# REDES
+# ====================================
+networks:
+  bot-network:
+    driver: bridge
+    name: aintonio-network
+
+# ====================================
+# VOLÚMENES DE DOCKER
+# ====================================
+volumes:
+  bot_logs:
+    driver: local
+    name: aintonio_logs
+  bot_data:
+    driver: local
+    name: aintonio_data
+  bot_resources:
+    driver: local
+    name: aintonio_resources
