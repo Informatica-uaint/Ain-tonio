@@ -79,52 +79,54 @@ class UaintBot(commands.Bot):
     async def sync_commands(self) -> None:
         """Sincroniza los comandos slash con Discord"""
         try:
-            # Debug: Ver qué comandos tenemos
-            logger.debug(f"Cogs cargados: {list(self.cogs.keys())}")
+            logger.info("🔄 Sincronizando comandos...")
 
-            # PASO 1: Limpiar el command tree
-            if self.settings.GUILD_ID:
+            # Ver comandos disponibles
+            tree_commands = self.tree.get_commands()
+            logger.info(f"📋 Comandos disponibles: {[cmd.name for cmd in tree_commands]}")
+
+            # En desarrollo: sync para guild específico para rapidez
+            # En producción: sync global para alcance completo
+            if self.settings.IS_DEVELOPMENT and self.settings.GUILD_ID:
+                # Copiar comandos globales al guild específico
                 guild = discord.Object(id=self.settings.GUILD_ID)
+
+                # Limpiar comandos del guild primero
                 self.tree.clear_commands(guild=guild)
-                logger.debug("Tree limpiado para el guild")
-            else:
-                self.tree.clear_commands()
-                logger.debug("Tree limpiado globalmente")
 
-            # PASO 2: Re-añadir comandos de todos los Cogs
-            commands_added = 0
-            for cog_name, cog in self.cogs.items():
-                # Buscar comandos app_commands en el Cog
-                if hasattr(cog, '__cog_app_commands__'):
-                    for command in cog.__cog_app_commands__:
-                        try:
-                            self.tree.add_command(command)
-                            commands_added += 1
-                            logger.debug(f"Añadido comando: {command.name} del cog {cog_name}")
-                        except Exception as e:
-                            logger.error(f"Error añadiendo comando {command.name}: {e}")
-                else:
-                    logger.debug(f"Cog {cog_name} no tiene __cog_app_commands__")
+                # Copiar cada comando global al guild
+                for cmd in tree_commands:
+                    self.tree.add_command(cmd, guild=guild)
+                    logger.debug(f"📋 Comando {cmd.name} copiado al guild")
 
-            logger.info(f"Comandos añadidos al tree después de limpiar: {commands_added}")
-
-            # PASO 3: Sincronizar con Discord
-            if self.settings.GUILD_ID:
-                guild = discord.Object(id=self.settings.GUILD_ID)
+                # Sincronizar el guild
                 synced = await self.tree.sync(guild=guild)
-                logger.info(f"Sincronizados {len(synced)} comandos en guild {self.settings.GUILD_ID}")
-                # Mostrar nombres de comandos sincronizados
-                if synced:
-                    cmd_names = [cmd['name'] for cmd in synced]
-                    logger.info(f"Comandos sincronizados: {cmd_names}")
+                logger.info(f"✅ Sincronizados {len(synced)} comandos en guild {self.settings.GUILD_ID} (desarrollo)")
+                logger.info("⚡ Comandos disponibles inmediatamente en el servidor de desarrollo")
+
             else:
+                # Sincronización global para producción
                 synced = await self.tree.sync()
-                logger.info(f"Sincronizados {len(synced)} comandos globalmente")
+                logger.info(f"✅ Sincronizados {len(synced)} comandos globalmente")
+                logger.info("⏰ Los comandos pueden tardar hasta 1 hora en aparecer")
+
+            # Mostrar comandos sincronizados
+            if synced:
+                names = []
+                for cmd in synced:
+                    if isinstance(cmd, dict):
+                        names.append(cmd.get('name', 'unknown'))
+                    else:
+                        names.append(getattr(cmd, 'name', str(cmd)))
+                logger.info(f"🎯 Comandos sincronizados: {names}")
+            else:
+                logger.warning("⚠️ No se sincronizaron comandos")
 
         except Exception as e:
-            logger.error(f"Error sincronizando comandos: {e}")
+            logger.error(f"❌ Error sincronizando comandos: {e}")
             import traceback
             logger.error(traceback.format_exc())
+
 
     async def on_ready(self) -> None:
         """Se ejecuta cuando el bot está listo"""
